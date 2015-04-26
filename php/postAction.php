@@ -32,8 +32,8 @@
 		case 'add':
 			if($_COOKIE['userId']){
 				if(!empty($_POST['title'])&&!empty($_POST['content'])){
-						$title = trim($_POST['title']);
-						$content = trim($_POST['content']);
+						$title = htmlspecialchars(trim($_POST['title']));
+						$content = htmlspecialchars(trim($_POST['content']));
 						$pubtime = time();
 						$userId = $_COOKIE['userId'];
 						isset($_POST['pic'])?$pic=$_POST['pic']:$pic=null;
@@ -134,7 +134,7 @@
 			if($_COOKIE['userId']){
 				if(!empty($_POST['id']) && !empty($_POST['content'])){
 					$postid = trim($_POST['id']);
-					$content = trim($_POST['content']);
+					$content = htmlspecialchars(trim($_POST['content']));
 					$pubtime = time();
 					$userId = $_COOKIE['userId'];
 					$result = mysql_query("select * from user where userId='$userId'");

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>回复帖子</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+   		<meta name="apple-mobile-web-app-capable" content="yes">
+	</head>
+	<style type="text/css">
+	ul,li{list-style: none;}
+		div{margin: 2rem 0;}
+		
+		
+	</style>
+	<body>
+		<h1>回复帖子</h1>
+		<p><a id="postLink"></a></p>
+		<p>当前登录用户：<span id="nickname"></span></p>
+		<div>内容：<textarea id="content" rows="10" cols="20"></textarea></div>
+		<div><button id="saveBtn">提交</button></div>
+	</body>
+</html>
+<script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/zepto.cookie.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var nickname = sessionStorage.nickname;
+$("#nickname").html(nickname);
+$("#postLink").html(sessionStorage.postTitle);
+$("#postLink").attr('href','viewPost.html?id='+sessionStorage.postId);
+$("#saveBtn").on('click',function () {
+		if ($.trim($('#content').val()).length<2) {
+			alert('内容不能小于20字符');
+			return;
+		}
+		var postData = {};
+		postData.id = sessionStorage.postId;
+		postData.content = $("#content").val();
+		
+		$.ajax({
+            type :'POST',
+            url :'php/postAction.php?method=reply',
+            data :postData,
+            dataType:'json',
+            success : function(data) {
+            	if (data.errCode == 200) {
+            		alert('回复成功');
+            		location.href = 'viewPost.html?id='+sessionStorage.postId;
+            	}else{
+            		alert(data.msg);
+            	}
+            }
+        })
+})	
+</script>

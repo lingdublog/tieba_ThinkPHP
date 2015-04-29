@@ -119,7 +119,9 @@
 						'postid'=>$row['postid'],
 						'content'=>$row['content'],
 						'pubtime'=>date('Y-m-d H:i:s',$row['pubtime']),
-						'author'=>$row['author']
+						'author'=>$row['author'],
+						'postid'=>$row['postid'],
+						
 					);
 				};
 				$arr = array(
@@ -177,6 +179,52 @@
 					msg => '用户未登录'
 				);
 			}
+			break;
+			//删除主题
+			case 'delPost':
+				$postid = trim($_POST['id']);
+				if($postid){
+					$result = mysql_query("delete from post where id='$postid'");
+					if($result){
+						$arr = array(
+							errCode => 200,
+							msg => '删除成功'
+						);
+					}else{
+						$arr = array(
+							errCode => 135,
+							msg => '删除失败'
+						);
+					}
+				}else{
+					$arr = array(
+						errCode => 136,
+						msg => '参数错误'
+					);
+				}
+			break;
+			//删除回帖
+			case 'delReply'	:
+				$replyid = trim($_POST['id']);
+				if($replyid){
+					$result = mysql_query("delete from reply where id='$replyid'");
+					if($result){
+						$arr = array(
+							errCode => 200,
+							msg => '删除成功'
+						);
+					}else{
+						$arr = array(
+							errCode => 135,
+							msg => '删除失败'
+						);
+					}
+				}else{
+					$arr = array(
+						errCode => 136,
+						msg => '参数错误'
+					);
+				}
 			break;
 	}
 	

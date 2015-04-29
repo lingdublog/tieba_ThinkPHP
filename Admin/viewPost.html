@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+   		<meta name="apple-mobile-web-app-capable" content="yes">
+	</head>
+	<style type="text/css">
+	ul,li{list-style: none;}
+		li{overflow: hidden;}
+		li div{width: 100px;float: left;text-align: center;}
+		li div.regtime{width: 160px;}
+		.zhutie-box{padding-bottom: 3rem;}
+		.huitie-box{padding: 3rem 0;border-top: 2px solid #ccc;}
+		.huitie{border-bottom: 1px solid #ccc;overflow: hidden;}
+		.huitie .cake{float: left;width: 40%;}
+	</style>
+	<body>
+		<div style="float: right;"><a href="index.html">返回首页</a></div>
+		<div class="zhutie-box">
+			<h1></h1>
+			<h5></h5>
+			<h4></h4>
+			<div style="float: right;"><a id="replyBtn">回帖</a></div>
+			<div id="content"></div>
+		</div>
+		<div class="huitie-box" id="huitie-box">
+		</div>
+	</body>
+</html>
+<script src="../js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+//获取get参数方法
+function getLocationVal(para){
+    var temp = location.search.split(para+"=")[1] || "";
+    return temp.indexOf("&")>=0 ? temp.split("&")[0] : temp; 
+}
+	var id = getLocationVal('id');
+	$("#replyBtn").attr('href','replyPost.html?id='+id);
+	//显示主贴
+	$.ajax({
+		type:"post",
+		url:"../php/postAction.php?method=showPost",
+		data:{id:id},
+		dataType :'json',
+		success:function (data) {
+			document.title = data.data.title;
+			$('h1').html(data.data.title);
+			$('h5').html('作者：'+data.data.author);
+			$('h4').html(data.data.pubtime);
+			$("#content").html('<img src="php/Uploads/'+data.data.pic+'">'+data.data.content);
+			$("#replyBtn").on('click',function () {
+				sessionStorage.postId = data.data.id;
+				sessionStorage.postTitle = data.data.title;
+			})
+		}
+	});
+	//显示回贴
+	$.ajax({
+		type:"post",
+		url:"../php/postAction.php?method=showReply",
+		data:{id:id},
+		dataType :'json',
+		success:function (data) {
+			var len = data.data.length;
+			$.each(data.data, function(index) {  
+				var str = '<div class="huitie">';
+				str += '<div class="cake">';
+				str += '<p>'+data.data[index].author+'</p>';
+				str += '<p>'+data.data[index].pubtime+'</p>';
+				str += '<p>'+data.data[index].content+'</p>';
+				str += '</div>'
+				str += '<div class="cake"><button onclick="modifyReply('+data.data[index].id+','+data.data[index].postid+')">修改回帖</button><button onclick="delReply">删除回帖</button></div>';
+				str += '</div>';
+				$("#huitie-box").append(str);
+			});
+		}
+	});
+	
+	//修改回帖方法
+	function modifyReply (id,postid) {
+		
+	}
+	//删除回帖方法
+	function delReply (id,postid) {
+		
+	}
+	
+</script>

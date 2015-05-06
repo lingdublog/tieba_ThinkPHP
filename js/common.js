@@ -1,5 +1,9 @@
 //全局配置，没有登录则跳到登录
 var userId = $.fn.cookie('userId');
-if(!userId){ //如果没有这个用户的custId
-	location.href = "login.html";
-}
+	if(!userId){ //如果没有这个用户的custId
+		location.href = "login.html";
+	}
+
+var host = 'http://localhost:8080/tieba/API/tieba/Home/';
+
+

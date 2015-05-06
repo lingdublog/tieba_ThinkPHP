@@ -38,11 +38,15 @@
 </html>
 <script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/zepto.cookie.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+
+var userId = $.fn.cookie('userId');
 $.ajax({
 	type:"get",
-	url:"php/memAction.php?method=userInfo",
+	url:host+"User/getUserInfo",
 	dataType :'json',
+	data:{userId:userId},
 	success:function (data) {
 		if (data.errCode==200) {
 			var nickname = data.data.nickname;
@@ -56,7 +60,7 @@ $.ajax({
 
 	$.ajax({
 		type:"get",
-		url:"php/postAction.php?method=showList",
+		url:host+"Post/showList",
 		dataType :'json',
 		success:function (data) {
 //			var data = JSON.parse(data);

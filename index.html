@@ -42,21 +42,36 @@
 <script type="text/javascript">
 
 var userId = $.fn.cookie('userId');
-$.ajax({
-	type:"get",
-	url:host+"User/getUserInfo",
-	dataType :'json',
-	data:{userId:userId},
-	success:function (data) {
-		if (data.errCode==200) {
-			var nickname = data.data.nickname;
-			var score = data.data.score;
-			$("#login-box").html('欢迎你，'+nickname+' 积分：'+score);
-		}else{
-			$("#login-box").html('<a href="register.html">注册 </a><a href="login.html"> 登录</a>');
+if (userId) {
+	$.ajax({
+		type:"get",
+		url:host+"User/getUserInfo",
+		dataType :'json',
+		data:{userId:userId},
+		success:function (data) {
+			if (data.errCode==200) {
+				var nickname = data.data.nickname;
+				var score = data.data.score;
+				$("#login-box").html('欢迎你，'+nickname+' 积分：'+score+' <span onclick="logout();"> 退出</span>');
+			}
 		}
+	})
+}else{
+	$("#login-box").html('<a href="register.html">注册 </a><a href="login.html"> 登录</a>');
+}
+
+//退出账户
+function logout () {
+	var con = confirm('确定退出吗？');
+	if (con) {
+		$.fn.cookie('userId','');
+		location.reload();
 	}
-})
+	
+}
+
+
+
 
 	$.ajax({
 		type:"get",

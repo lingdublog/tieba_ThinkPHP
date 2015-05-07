@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="utf-8">
 		<title>登录</title>
+		<script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/zepto.cookie.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		
@@ -16,9 +19,9 @@
 		
 	</body>
 </html>
-<script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/zepto.cookie.min.js" type="text/javascript" charset="utf-8"></script>
+
 <script type="text/javascript">
+var returnUrl = getLocationVal('returnUrl');
 	$("#saveBtn").on('click',function () {
 		var postData = {};
 		postData.username = $("#username").val();
@@ -26,17 +29,23 @@
 		console.log(postData);
 		$.ajax({
             type :'POST',
-            url :'php/memAction.php?method=login',
+            url :host+'User/login',
             data :postData,
             dataType:'json',
             success : function(data) {
             	if (data.errCode == 200) {
-            		alert('登录成功');
+            		
+//          		alert('登录成功');
             		var userId = data.data.userId;
             		var nickname = data.data.nickname;
             		$.fn.cookie('userId',userId);
             		sessionStorage.nickname = nickname;
-            		location.href = 'index.html';
+            		if (returnUrl) {
+            			location.href = returnUrl;
+            		}else{
+            			location.href = 'index.html';
+            		}
+            		
             	}else{
             		alert(data.msg);
             	}

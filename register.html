@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="utf-8">
 		<title>注册</title>
+		<script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/zepto.cookie.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
 	</head>
 	<body>
 		<form action="addMem.php" method="post">
@@ -20,7 +23,7 @@
 		
 	</body>
 </html>
-<script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+
 <script type="text/javascript">
 	$("#saveBtn").on('click',function () {
 		if (!$('#username').val()) {
@@ -42,7 +45,7 @@
 		console.log(postData);
 		$.ajax({
             type :'POST',
-            url :'php/memAction.php?method=add',
+            url :host+'User/register',
             data :postData,
             dataType:'json',
             success : function(data) {

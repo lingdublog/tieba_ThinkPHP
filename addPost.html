@@ -32,7 +32,7 @@
 	</body>
 </html>
 
-<script src="../AjaxUploadDemo/Scirpt/ajaxupload.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/ajaxupload.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 var nickname = sessionStorage.nickname;
 $("#nickname").html(nickname);
@@ -51,7 +51,7 @@ $("#saveBtn").on('click',function () {
 		postData.pic = picname;
 		$.ajax({
             type :'POST',
-            url :'php/postAction.php?method=add',
+            url :host+'Post/addPost',
             data :postData,
             dataType:'json',
             success : function(data) {

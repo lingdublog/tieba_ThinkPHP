@@ -72,11 +72,14 @@ function logout () {
 
 
 
-
+var postData = {};
+postData.pageIndex = '1';
+postData.pageNum = '5';
 	$.ajax({
-		type:"get",
+		type:"post",
 		url:host+"Post/showList",
 		dataType :'json',
+		data:postData,
 		success:function (data) {
 //			var data = JSON.parse(data);
 			var len = data.data.length;
@@ -85,8 +88,8 @@ function logout () {
 				str+='<a href="viewPost.html?id='+data.data[i].id+'" class="block">';
 				str+='<h2>'+data.data[i].title+'</h2>';
 				str+='<div class="cake">'+data.data[i].author+'</div>';
-				str+='<div class="cake">'+data.data[i].replynum+'个回帖</div>';
-				str+='<div class="cake time">'+data.data[i].replytime+'</div>';
+				str+='<div class="cake">'+data.data[i].replyNum+'个回帖</div>';
+				str+='<div class="cake time">'+data.data[i].replyTime+'</div>';
 				str+='</a>';
 				str+='</li>';
 				$('#list').append(str);

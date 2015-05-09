@@ -35,7 +35,6 @@ var returnUrl = getLocationVal('returnUrl');
             success : function(data) {
             	if (data.errCode == 200) {
             		
-//          		alert('登录成功');
             		var userId = data.data.userId;
             		var nickname = data.data.nickname;
             		$.fn.cookie('userId',userId);

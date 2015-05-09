@@ -10,7 +10,7 @@ class UserController extends Controller {
 		$userId = I('userId');
 		$user = M('User');
 		$condition['userId'] = $userId;
-		$data = $user->where($condition)->select();
+		$data = $user->field('id,username,nickname,score')->where($condition)->select();
 		$arr['errCode'] = 200;
 		$arr['msg'] = '查询成功';
 		$arr['data'] = $data[0];
@@ -23,16 +23,12 @@ class UserController extends Controller {
 		$user = M('User');
 		$condition['username'] = $username;
 		$condition['password'] = md5($password);
-		$data = $user->where($condition)->select();
-//		echo json_encode($data);
+		$data = $user->field('id,userId,nickname')->where($condition)->select();
+//		print_r($data);
 		if($data){
 			$arr['errCode'] = 200;
-			$arr['msg'] = '查询成功';
-			$arr['data'] = array(
-				'id' => $data[0]['id'],
-				'userId' => $data[0]['userid'],
-				'nickname' => $data[0]['nickname']
-			);
+			$arr['msg'] = '登录成功';
+			$arr['data'] = $data[0];
 		}else{
 			$arr['errCode'] = 105;
 			$arr['msg'] = '用户名或密码错误';
@@ -45,12 +41,12 @@ class UserController extends Controller {
 		$password = I('password');
 		$nickname = I('nickname');
 		$regtime = time();
-		$userId = md5($username);
+		$userId = md5($username.'tb');
 		$user = M('User');
 		$data['username'] = $username;
 		$data['password'] = md5($password);
 		$data['nickname'] = $nickname;
-		$data['regtime'] = $regtime;
+		$data['regTime'] = $regtime;
 		$data['userId'] = $userId;
 		$result = $user->add($data);
 //		echo json_encode($result);

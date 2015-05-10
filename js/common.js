@@ -1,7 +1,7 @@
 //全局配置，没有登录则跳到登录
 
 
-if (location.href.indexOf("index")==-1&&location.href.indexOf('login')==-1&&location.href.indexOf('register')==-1) {//不是这几个页面需要判断登录
+if (location.pathname.indexOf("addPost")>-1||location.pathname.indexOf('replyPost')>-1) {//这几个页面需要判断登录
 	var userId = $.fn.cookie('userId');
 	var returnUrl = location.href;
 	if(!userId){ //如果没有这个用户的custId

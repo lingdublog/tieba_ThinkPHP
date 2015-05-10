@@ -7,13 +7,19 @@ class UserController extends Controller {
     }
 	//获取用户信息
 	public function getUserInfo(){
-		$userId = I('userId');
-		$user = M('User');
-		$condition['userId'] = $userId;
-		$data = $user->field('id,username,nickname,score')->where($condition)->select();
-		$arr['errCode'] = 200;
-		$arr['msg'] = '查询成功';
-		$arr['data'] = $data[0];
+		$userId = $_COOKIE['userId'];
+		if($userId){
+			$user = M('User');
+			$condition['userId'] = $userId;
+			$data = $user->field('id,username,nickname,score')->where($condition)->select();
+			$arr['errCode'] = 200;
+			$arr['msg'] = '查询成功';
+			$arr['data'] = $data[0];
+		}else{
+			$arr['errCode'] = 108;
+			$arr['msg'] = '用户未登录';
+		}
+		
 		echo json_encode($arr);
 	}
 	//登录

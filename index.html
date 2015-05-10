@@ -22,43 +22,48 @@
 		</div>
 		
 		<ul id="list">
-			<!--<li>
-				<div>编号</div>
-				<div>文章标题</div>
-				<div>作者</div>
-				<div class="regtime">发表时间</div>
-			</li>-->
-			<!--<li>
-				<div>1</div>
-				<div>sdgdd</div>
-				<div>dsg</div>
-			</li>-->
+			
 		</ul>
+		
+		<script type="text/html" id="loginBoxTemp">
+			欢迎你，{{nickname}} 积分：{{score}} <span onclick="logout();"> 退出</span>
+		</script>
+		
+		<script type="text/html" id="listTemp">
+		{{each data as v k }}
+			<li>
+				<a href="viewPost.html?id={{v.id}}" class="block">
+					<h2>{{v.title}}</h2>
+					<div class="cake">{{v.author}}</div>
+					<div class="cake">{{v.replyNum}}个回帖</div>
+					<div class="cake time">{{v.replyTime}}</div>
+				</a>
+			</li>
+		{{/each}}
+		</script>
+		
 	</body>
 </html>
 <script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/zepto.cookie.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/template.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/common.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 
-var userId = $.fn.cookie('userId');
-if (userId) {
 	$.ajax({
 		type:"get",
 		url:host+"User/getUserInfo",
 		dataType :'json',
-		data:{userId:userId},
 		success:function (data) {
 			if (data.errCode==200) {
-				var nickname = data.data.nickname;
-				var score = data.data.score;
-				$("#login-box").html('欢迎你，'+nickname+' 积分：'+score+' <span onclick="logout();"> 退出</span>');
+				var html = template('loginBoxTemp',data.data);
+				$("#login-box").html(html);
+			}else{
+				$("#login-box").html('<a href="register.html">注册 </a><a href="login.html"> 登录</a>');
 			}
 		}
 	})
-}else{
-	$("#login-box").html('<a href="register.html">注册 </a><a href="login.html"> 登录</a>');
-}
+
 
 //退出账户
 function logout () {
@@ -81,8 +86,12 @@ postData.pageNum = '5';
 		dataType :'json',
 		data:postData,
 		success:function (data) {
-//			var data = JSON.parse(data);
-			var len = data.data.length;
+			
+			var html = template('listTemp', data);
+			document.getElementById('list').innerHTML = html;
+			
+			
+			/*var len = data.data.length;
 			for (var i=0;i<len;i++) {
 				var str = '<li>';
 				str+='<a href="viewPost.html?id='+data.data[i].id+'" class="block">';
@@ -93,7 +102,7 @@ postData.pageNum = '5';
 				str+='</a>';
 				str+='</li>';
 				$('#list').append(str);
-			}
+			}*/
 		}
 	});
 </script>

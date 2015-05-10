@@ -1,25 +1,34 @@
 <?php
 namespace Home\Controller;
 use Think\Controller;
-class PostController extends Controller {
+class ReplyController extends Controller {
     public function index(){
         
     }
-	//展示帖子列表
+	//展示回帖列表
 	public function showList(){
+		$postId = I('id');
 		$pageIndex = I('pageIndex');
 		$pageNum = I('pageNum');
-		$post = M('Post');
-		$data = $post->order('id desc')->page($pageIndex,$pageNum)->select();
+		$Reply = M('Reply');
+		$data = $Reply->page($pageIndex,$pageNum)->where('postId='.$postId)->select();
+		$replyCount = $Reply->where('postId='.$postId)->count();
 //		print_r($data);
-		foreach($data as $k=>$v){
-			$data[$k]['replyTime'] = date('Y-m-d H:i:s',$data[$k]['replyTime']);
-//			print_r($v['pubTime']) ;
+		if($data){
+			foreach($data as $k=>$v){
+				$data[$k]['pubTime'] = date('Y-m-d H:i:s',$data[$k]['pubTime']);
+	//			print_r($v['pubTime']) ;
+			}
+	//		print_r($data);
+			$arr['errCode'] = 200;
+			$arr['msg'] = '查询成功';
+			$arr['replyCount'] = $replyCount;
+			$arr['data'] = $data;
+		}else{
+			$arr['errCode'] = 108;
+			$arr['msg'] = '查询失败';
 		}
-//		print_r($data);
-		$arr['errCode'] = 200;
-		$arr['msg'] = '查询成功';
-		$arr['data'] = $data;
+		
 		echo json_encode($arr);
 	}
 	//添加主题
@@ -51,20 +60,7 @@ class PostController extends Controller {
 		}
 		echo json_encode($arr);
 	}
-	//展示主题
-	public function show(){
-		$post = M('Post');
-		$id = I('id');
-		$data = $post->field('id,title,content,author,pubTime')->where('id='.$id)->select();
-		if($data){
-			$data[0]['pubTime'] = date('Y-m-d H:i:s',$data[0]['pubTime']);
-			$arr['errCode'] = 200;
-			$arr['msg'] = '查询成功';
-			$arr['data'] = $data[0];
-		}else{
-			$arr['errCode'] = 108;
-			$arr['msg'] = '查询失败';
-		}
-		echo json_encode($arr);
+	public function del(){
+		
 	}
 }

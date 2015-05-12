@@ -39,7 +39,7 @@ $("#saveBtn").on('click',function () {
 		
 		$.ajax({
             type :'POST',
-            url :'php/postAction.php?method=reply',
+            url :host+'Reply/add',
             data :postData,
             dataType:'json',
             success : function(data) {

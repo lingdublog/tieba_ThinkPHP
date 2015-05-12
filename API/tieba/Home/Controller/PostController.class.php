@@ -67,4 +67,32 @@ class PostController extends Controller {
 		}
 		echo json_encode($arr);
 	}
+	
+	//更新主题 
+	public function update(){
+		$user = M('User');
+		$post = M('Post');
+		
+		$data1['userId'] = $_COOKIE['userId'];
+		
+		$data['id'] = I('id');
+		$data['author'] = $user->where($data1)->getField('nickname');
+		$data['title'] = I('title');
+		$data['content'] = I('content');
+		$data['pic'] = I('pic');
+		$data['updateTime'] = time();
+		
+		
+		$result = $post->save($data);//数据写入post表
+		
+		
+		if($result){
+			$arr['errCode'] = 200;
+			$arr['msg'] = '发表成功';
+		}else{
+			$arr['errCode'] = 108;
+			$arr['msg'] = '发表失败';
+		}
+		echo json_encode($arr);
+	}
 }

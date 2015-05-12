@@ -33,30 +33,27 @@ class ReplyController extends Controller {
 	}
 	//添加主题
 	public function add(){
-		$user = M('User');
-		$post = M('Post');
-		
+		$reply = M('Reply');
+		$user = M('User');	
 		$data1['userId'] = $_COOKIE['userId'];
 		
 		$data['author'] = $user->where($data1)->getField('nickname');
-		$data['title'] = I('title');
 		$data['content'] = I('content');
-		$data['pic'] = I('pic');
+		$data['postId'] = I('id');
 		$data['pubTime'] = time();
-		$data['replyTime'] = time();
 		
 		
-		$result = $post->add($data);//数据写入post表
-		$result1 = $user->where($data1)->setInc('score',2);//用户积分加3
+		$result = $reply->add($data);//数据写入post表
+		$result1 = $user->where($data1)->setInc('score',1);//用户积分加1
 		
 		
 //		echo $result;
 		if($result && $result1){
 			$arr['errCode'] = 200;
-			$arr['msg'] = '发表成功';
+			$arr['msg'] = '回复成功';
 		}else{
 			$arr['errCode'] = 108;
-			$arr['msg'] = '发表失败';
+			$arr['msg'] = '回复失败';
 		}
 		echo json_encode($arr);
 	}

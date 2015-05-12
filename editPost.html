@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>修改帖子</title>
+		<script src="js/zepto.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/zepto.cookie.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+	ul,li{list-style: none;}
+		div{margin: 2rem 0;}
+		
+		
+	</style>
+	<body>
+		<h1>修改帖子</h1>
+		<p>当前登录用户：<span id="nickname"></span></p>
+		<div id="wrap"></div>
+		<script type="text/html" id="wrapTemp">
+			
+		
+		<div>标题：<input type="text" id="title" value="{{title}}" /></div>
+		
+<div>
+            <label>上传图片：</label><input type="button" value="选取图片" id="selector" />
+            <br />
+            <label>选择的图片路径：</label><input type="text" readonly="readonly" value="" id="filepath" />
+            <br />
+            <label></label><input type="button" value="上传" id="up" />
+            <br />
+        </div>
+
+		<div>内容：<textarea id="content" rows="10" cols="20" >{{content}}</textarea></div>
+		</script>
+		<div><button id="saveBtn">提交</button></div>
+	</body>
+</html>
+<script src="js/template.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/ajaxupload.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+
+
+var nickname = sessionStorage.nickname;
+$("#nickname").html(nickname);
+
+var id = sessionStorage.postId;
+	//显示主贴
+	$.ajax({
+		type:"post",
+		url:host+"Post/show",
+		data:{id:id},
+		dataType :'json',
+		success:function (data) {
+			document.title = data.data.title;
+			
+			var html = template('wrapTemp',data.data);
+			$("#wrap").html(html);
+			
+		}
+	});
+
+$("#saveBtn").on('click',function () {
+		if ($.trim($('#title').val()).length<2) {
+			alert('标题不能小于4字符');
+			return;
+		}
+		if ($.trim($('#content').val()).length<2) {
+			alert('内容不能小于20字符');
+			return;
+		}
+		var postData = {};
+		postData.id = id;
+		postData.title = $("#title").val();
+		postData.content = $("#content").val();
+//		postData.pic = picname;
+		$.ajax({
+            type :'POST',
+            url :host+'Post/update',
+            data :postData,
+            dataType:'json',
+            success : function(data) {
+            	if (data.errCode == 200) {
+            		alert('发表成功');
+            		location.href = 'index.html';
+            	}else{
+            		alert(data.msg);
+            	}
+            }
+        })
+		
+		
+		
+		
+})	
+	
+</script>

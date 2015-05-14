@@ -31,24 +31,28 @@ class ReplyController extends Controller {
 		
 		echo json_encode($arr);
 	}
-	//添加主题
+	//添加回复
 	public function add(){
 		$reply = M('Reply');
 		$user = M('User');	
+		$post = M('Post');	
 		$data1['userId'] = $_COOKIE['userId'];
-		
+		$data2['replyTime'] = time();
+		$id = I('id');
 		$data['author'] = $user->where($data1)->getField('nickname');
 		$data['content'] = I('content');
-		$data['postId'] = I('id');
+		$data['postId'] = $id;
 		$data['pubTime'] = time();
 		
 		
 		$result = $reply->add($data);//数据写入post表
 		$result1 = $user->where($data1)->setInc('score',1);//用户积分加1
+		$result2 = $post->where('id='.$id)->save($data2);//插入主题最近回复时间
+		$result3 = $post->where('id='.$id)->setInc('replyNum',1);//回帖个数加1
 		
 		
 //		echo $result;
-		if($result && $result1){
+		if($result && $result1 && $result2 &&$result3 ){
 			$arr['errCode'] = 200;
 			$arr['msg'] = '回复成功';
 		}else{
@@ -58,6 +62,22 @@ class ReplyController extends Controller {
 		echo json_encode($arr);
 	}
 	public function del(){
-		
+		$reply = M('Reply');
+		$post = M('Post');
+		$user = M('User');
+		$id = I('id');
+		$postId = I('postId');
+		$author = I('author');
+		$result = $reply->where('id='.$id)->delete();//删除回帖
+		$result1 = $post->where('id='.$postId)->setDec('replyNum',1);//主题回帖数减1
+//		$result2 = $user->where('nickname='.$author)->setDec('score',1);//回帖者积分减1
+		if($result &&$result1 ){
+			$arr['errCode'] = 200;
+			$arr['msg'] = '删除成功';
+		}else{
+			$arr['errCode'] = 112;
+			$arr['msg'] = '删除失败';
+		}
+		echo json_encode($arr);
 	}
 }

@@ -95,4 +95,21 @@ class PostController extends Controller {
 		}
 		echo json_encode($arr);
 	}
+	
+	//删除主题
+	public function del(){
+		$reply = M('Reply');
+		$post = M('Post');
+		$id = I('id');
+		$result = $post->where('id='.$id)->delete();
+		$result1 = $reply->where('postId='.$id)->delete();
+		if($result && $result1){
+			$arr['errCode'] = 200;
+			$arr['msg'] = '删除成功';
+		}else{
+			$arr['errCode'] = 112;
+			$arr['msg'] = '删除失败';
+		}
+		echo json_encode($arr);
+	}
 }

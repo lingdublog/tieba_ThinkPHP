@@ -13,7 +13,8 @@
 		li div.regtime{width: 160px;}
 		.zhutie-box{padding-bottom: 3rem;}
 		.huitie-box{padding: 3rem 0;border-top: 2px solid #ccc;}
-		.huitie{border-bottom: 1px solid #ccc;}
+		.huitie{border-bottom: 1px solid #ccc;position: relative;}
+		.huitie .delReply{display: block;position: absolute;right: 10px;top: 20px;}
 	</style>
 	<body>
 		<div style="float: right;"><a href="index.html">返回首页</a></div>
@@ -27,7 +28,7 @@
 			<h1>{{title}}</h1>
 			<h5>作者：{{author}}</h5>
 			<h4>{{pubTime}}</h4>
-			<div style="float: right;"><a id="editPostBtn" onclick="editPost('{{id}}');">修改主题</a><a id="delPostBtn" onclick="delPost('{{id}}');">删除主题</a><a id="replyBtn" onclick="gotoReply('{{id}}','{{title}}');">回帖</a></div>
+			<div style="float: right;"><button id="editPostBtn" onclick="editPost('{{id}}');">修改主题</button><button id="delPostBtn" onclick="delPost('{{id}}');">删除主题</button><button id="replyBtn" onclick="gotoReply('{{id}}','{{title}}');">回帖</button></div>
 			<div id="content"><img src="{{pic}}">{{content}}</div>
 		</script>
 		
@@ -37,6 +38,7 @@
 				<p>{{v.author}}</p>
 				<p>{{v.pubTime}}</p>
 				<p>{{v.content}}</p>
+				<button class="delReply" onclick="delReply('{{v.id}},{{v.postId}},{{v.author}}')">删除</button>
 			</div>
 		{{/each}}
 		</script>
@@ -53,18 +55,59 @@ function getLocationVal(para){
     var temp = location.search.split(para+"=")[1] || "";
     return temp.indexOf("&")>=0 ? temp.split("&")[0] : temp; 
 }
-
+//回帖
 function gotoReply (id,title) {
 	sessionStorage.postId = id;
 	sessionStorage.postTitle = title;
 	location.href = 'replyPost.html?id='+id;
 }
-
+//编辑主题
 function editPost (id) {
 	sessionStorage.postId = id;
 	location = 'editPost.html';
 }
+//删除主题
+function delPost (id,postId,author) {
+	
+	var con = confirm('确定要删除主题吗？');
+	if (con) {
+		var postData = {};
+		postData.id = id;
+		postData.postId = postId;
+		postData.author = author;
+		$.ajax({
+			type:"post",
+			url:host+"Post/del",
+			data:postData,
+			dataType:'json',
+			success:function (data) {
+				if (data.errCode == 200) {
+					alert('删除成功！');
+					location.href = 'index.html';
+				}
+			}
+		});
+	}
+}
 
+//删除回帖
+function delReply (id) {
+	var con = confirm('确定要删除此回帖吗？');
+	if (con) {
+		$.ajax({
+			type:"post",
+			url:host+"Reply/del",
+			data:{id:id},
+			dataType:'json',
+			success:function (data) {
+				if (data.errCode == 200) {
+					alert('删除成功！');
+					location.href = 'index.html';
+				}
+			}
+		});
+	}
+}
 	var id = getLocationVal('id');
 	//显示主贴
 	$.ajax({
